@@ -24,9 +24,51 @@
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  /* Theme-sensitive tokens */
+  --nav-bg: #0a0a0bcc;
+  --border-faint: rgba(255,255,255,0.031);
+  --border-subtle: rgba(255,255,255,0.024);
+  --border-light: rgba(255,255,255,0.063);
+  --border-medium: rgba(255,255,255,0.071);
+  --border-strong: rgba(255,255,255,0.082);
+  --shadow-color: rgba(0,0,0,0.25);
+  --grain-opacity: 0.035;
+}
+
+html[data-theme="light"] {
+  --bg: #f5f2ec;
+  --bg-elevated: #ede9e1;
+  --bg-card: #e5e0d6;
+  --text: #1c1a17;
+  --text-muted: #6a6560;
+  --text-dim: #9e9890;
+  --accent: #a8832a;
+  --accent-glow: #a8832a40;
+  --accent-subtle: #a8832a18;
+  --blue: #3060c0;
+  --green: #208850;
+  --red: #bb3c3c;
+  --orange: #b07018;
+  --nav-bg: #f5f2ecdc;
+  --border-faint: rgba(0,0,0,0.07);
+  --border-subtle: rgba(0,0,0,0.05);
+  --border-light: rgba(0,0,0,0.09);
+  --border-medium: rgba(0,0,0,0.11);
+  --border-strong: rgba(0,0,0,0.15);
+  --shadow-color: rgba(0,0,0,0.1);
+  --grain-opacity: 0.018;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* Smooth theme transition */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+/* Exclude animations & transforms from transition override */
+.reveal, .skill-bar, .cursor-glow, .hero-name span, .hero-label, .hero-desc, .hero-tags, .hero-welcome, .scroll-indicator {
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
 
 html {
   scroll-behavior: smooth;
@@ -49,7 +91,7 @@ body::before {
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: var(--grain-opacity);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
@@ -79,8 +121,8 @@ nav {
   justify-content: space-between;
   align-items: center;
   backdrop-filter: blur(20px);
-  background: #0a0a0bcc;
-  border-bottom: 1px solid #ffffff08;
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border-faint);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 nav.hidden { transform: translateY(-100%); }
@@ -122,12 +164,47 @@ nav.hidden { transform: translateY(-100%); }
 .nav-links a:hover { color: var(--text); }
 .nav-links a:hover::after { width: 100%; }
 
+/* ====== THEME TOGGLE ====== */
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-faint);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-subtle);
+}
+.theme-toggle svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.2s, transform 0.3s;
+}
+.icon-sun { display: none; }
+.icon-moon { display: block; }
+html[data-theme="light"] .icon-sun { display: block; }
+html[data-theme="light"] .icon-moon { display: none; }
+
 /* ====== LANG TOGGLE ====== */
 .lang-toggle {
   display: flex;
   align-items: center;
   background: var(--bg-elevated);
-  border: 1px solid #ffffff10;
+  border: 1px solid var(--border-light);
   border-radius: 100px;
   padding: 3px;
   gap: 0;
@@ -301,7 +378,7 @@ nav.hidden { transform: translateY(-100%); }
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   padding: 0.5rem 1rem;
-  border: 1px solid #ffffff12;
+  border: 1px solid var(--border-medium);
   border-radius: 100px;
   color: var(--text-muted);
   background: var(--bg-elevated);
@@ -382,7 +459,7 @@ section {
 .section-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(to right, #ffffff12, transparent);
+  background: linear-gradient(to right, var(--border-medium), transparent);
 }
 
 /* ====== REVEAL ANIMATION ====== */
@@ -401,8 +478,8 @@ section {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
-  background: #ffffff08;
-  border: 1px solid #ffffff08;
+  background: var(--border-faint);
+  border: 1px solid var(--border-faint);
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 6rem;
@@ -510,7 +587,7 @@ section {
 
 .project-card {
   background: var(--bg-card);
-  border: 1px solid #ffffff08;
+  border: 1px solid var(--border-faint);
   border-radius: 16px;
   padding: 2.5rem;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -529,9 +606,9 @@ section {
   transition: opacity 0.4s;
 }
 .project-card:hover {
-  border-color: #ffffff15;
+  border-color: var(--border-strong);
   transform: translateY(-4px);
-  box-shadow: 0 20px 60px #00000040;
+  box-shadow: 0 20px 60px var(--shadow-color);
 }
 .project-card:hover::before { opacity: 1; }
 
@@ -572,9 +649,9 @@ section {
   letter-spacing: 0.08em;
   padding: 0.35rem 0.7rem;
   border-radius: 4px;
-  background: #ffffff06;
+  background: var(--border-subtle);
   color: var(--text-dim);
-  border: 1px solid #ffffff08;
+  border: 1px solid var(--border-faint);
 }
 
 /* ====== SKILLS ====== */
@@ -601,12 +678,12 @@ section {
   align-items: center;
   padding: 1rem 1.25rem;
   background: var(--bg-elevated);
-  border: 1px solid #ffffff06;
+  border: 1px solid var(--border-subtle);
   border-radius: 10px;
   transition: all 0.3s;
 }
 .skill-item:hover {
-  border-color: #ffffff12;
+  border-color: var(--border-medium);
   background: var(--bg-card);
 }
 .skill-item .name {
@@ -616,7 +693,7 @@ section {
 .skill-bar-container {
   width: 120px;
   height: 3px;
-  background: #ffffff08;
+  background: var(--border-faint);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -633,7 +710,7 @@ section {
 /* ====== EDUCATION ====== */
 .edu-card {
   background: var(--bg-card);
-  border: 1px solid #ffffff08;
+  border: 1px solid var(--border-faint);
   border-radius: 16px;
   padding: 3rem;
   display: flex;
@@ -645,7 +722,7 @@ section {
   height: 100px;
   border-radius: 20px;
   background: linear-gradient(135deg, var(--accent-subtle), #5b8def15);
-  border: 1px solid #ffffff10;
+  border: 1px solid var(--border-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -680,7 +757,7 @@ section {
 /* ====== PASSION SECTION ====== */
 .passion-card {
   background: linear-gradient(135deg, #c4a26508, #5b8def06);
-  border: 1px solid #ffffff08;
+  border: 1px solid var(--border-faint);
   border-radius: 20px;
   padding: 4rem;
   display: grid;
@@ -744,7 +821,7 @@ section {
   gap: 0.6rem;
   padding: 0.85rem 1rem;
   background: var(--bg-elevated);
-  border: 1px solid #ffffff06;
+  border: 1px solid var(--border-subtle);
   border-radius: 10px;
   font-size: 0.8rem;
   font-weight: 400;
@@ -766,7 +843,7 @@ section {
 /* ====== FOOTER ====== */
 footer {
   padding: 4rem 8vw;
-  border-top: 1px solid #ffffff08;
+  border-top: 1px solid var(--border-faint);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -823,6 +900,12 @@ footer {
       <a href="#skills" data-en="Skills" data-fr="Compétences">Skills</a>
       <a href="#education" data-en="Education" data-fr="Formation">Education</a>
     </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+      <!-- Moon icon (shown in dark mode) -->
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <!-- Sun icon (shown in light mode) -->
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
     <div class="lang-toggle" id="langToggle">
       <div class="slider"></div>
       <button class="lang-btn active" data-lang="en">EN</button>
@@ -845,7 +928,7 @@ footer {
       <div class="line1"><span>Abdoulaye</span></div>
       <div class="line2"><span>Diallo</span></div>
     </h1>
-    <p class="hero-desc" data-en="ENSEIRB-MATMECA engineer specializing in computer vision, deep learning & MLOps — driven by a lifelong passion for basketball and sports analytics." data-fr="Ingénieur ENSEIRB-MATMECA spécialisé en computer vision, deep learning & MLOps — porté par une passion de toujours pour le basketball et la sports analytics.">ENSEIRB-MATMECA engineer specializing in computer vision, deep learning & MLOps — driven by a lifelong passion for basketball and sports analytics.</p>
+    <p class="hero-desc" data-en="ENSEIRB-MATMECA engineer specializing in computer vision, deep learning & MLOps, driven by a lifelong passion for basketball and sports analytics." data-fr="Ingénieur ENSEIRB-MATMECA spécialisé en computer vision, deep learning & MLOps — porté par une passion de toujours pour le basketball et la sports analytics.">ENSEIRB-MATMECA engineer specializing in computer vision, deep learning & MLOps — driven by a lifelong passion for basketball and sports analytics.</p>
     <div class="hero-tags">
       <span class="tag">Computer Vision</span>
       <span class="tag">Deep Learning</span>
@@ -892,9 +975,9 @@ footer {
 
   <div class="timeline">
     <div class="timeline-item reveal">
-      <div class="timeline-date" data-en="2024 — Internship" data-fr="2024 — Stage">2024 — Internship</div>
+      <div class="timeline-date" data-en="2025 — Internship" data-fr="2025 — Stage">2025 — Internship</div>
       <div class="timeline-role">Computer Vision Engineer</div>
-      <div class="timeline-company">ATOS — Toulouse</div>
+      <div class="timeline-company">ATOS — Pessac, France</div>
       <div class="timeline-desc" data-en="Optimized real-time visual object tracking models on Jetson Nano. Implemented TensorRT and quantization techniques for embedded deployment. Significantly improved tracking continuity and reduced latency on resource-constrained systems." data-fr="Optimisation de modèles de visual object tracking en temps réel sur Jetson Nano. Implémentation de techniques TensorRT et quantification pour le déploiement embarqué. Amélioration significative de la continuité de suivi et réduction de la latence sur systèmes contraints.">Optimized real-time visual object tracking models on Jetson Nano. Implemented TensorRT and quantization techniques for embedded deployment. Significantly improved tracking continuity and reduced latency on resource-constrained systems.</div>
       <div class="metric-badges">
         <span class="metric-badge green" data-en="-30% latency" data-fr="-30% latence">-30% latency</span>
@@ -904,9 +987,9 @@ footer {
     </div>
 
     <div class="timeline-item reveal">
-      <div class="timeline-date" data-en="2023 — Internship" data-fr="2023 — Stage">2023 — Internship</div>
+      <div class="timeline-date" data-en="2024 — Internship" data-fr="2024 — Stage">2024 — Internship</div>
       <div class="timeline-role">ML Pipeline Engineer</div>
-      <div class="timeline-company">VanillaHR — Remote</div>
+      <div class="timeline-company">VanillaHR — Mérignac, France</div>
       <div class="timeline-desc" data-en="Built large-scale ML pipelines for automated CV parsing using OpenAI APIs, deployed on AWS. Drastically reduced manual review while maintaining high extraction quality." data-fr="Développement de pipelines ML pour le parsing automatique de CVs à grande échelle avec les APIs OpenAI, déployées sur AWS. Réduction drastique de la revue manuelle tout en maintenant une qualité d'extraction élevée.">Built large-scale ML pipelines for automated CV parsing using OpenAI APIs, deployed on AWS. Drastically reduced manual review while maintaining high extraction quality.</div>
       <div class="metric-badges">
         <span class="metric-badge green" data-en="40% → 8% manual review" data-fr="40% → 8% revue manuelle">40% → 8% manual review</span>
@@ -942,7 +1025,7 @@ footer {
       <div class="project-name">NBA Analytics Engine</div>
       <div class="project-desc" data-en="Analytics engine processing 70+ years of basketball statistics. Advanced metrics computation, complete data pipeline with DuckDB for ultra-fast analytical queries." data-fr="Moteur d'analyse traitant 70+ années de statistiques basketball. Calcul de métriques avancées, pipeline de données complet avec DuckDB pour des requêtes analytiques ultra-rapides.">Analytics engine processing 70+ years of basketball statistics. Advanced metrics computation, complete data pipeline with DuckDB for ultra-fast analytical queries.</div>
       <div class="project-tech">
-        <span>Python</span><span>DuckDB</span><span>Analytics</span><span>ETL</span>
+        <span>Python</span><span>PostgreSQL</span><span>Analytics</span><span>ETL</span>
       </div>
     </div>
 
@@ -1092,6 +1175,22 @@ footer {
 </footer>
 
 <script>
+// ====== THEME TOGGLE ======
+const themeToggleBtn = document.getElementById('themeToggle');
+const savedTheme = localStorage.getItem('portfolio-theme') || 'dark';
+if (savedTheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+
+themeToggleBtn.addEventListener('click', () => {
+  const isLight = document.documentElement.hasAttribute('data-theme');
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('portfolio-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('portfolio-theme', 'light');
+  }
+});
+
 // ====== LANGUAGE SYSTEM ======
 let currentLang = 'en';
 const langToggle = document.getElementById('langToggle');
